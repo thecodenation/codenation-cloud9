@@ -38,6 +38,21 @@ RUN scripts/install-sdk.sh
 # Tweak standlone.js conf
 RUN sed -i -e 's_127.0.0.1_0.0.0.0_g' /cloud9/configs/standalone.js 
 
+
+# Install challenges dependencies
+# python deps
+RUN apt-get install -y python3-pip python-pip default-jdk && \
+    pip3 install virtualenv && \
+    curl -O https://storage.googleapis.com/golang/go1.11.2.linux-amd64.tar.gz && \
+    tar -xvf go1.11.2.linux-amd64.tar.gz && \
+    mv go /usr/local && \
+    rm -f go1.11.2.linux-amd64.tar.gz && \
+    echo 'PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/usr/local/go/bin:/codenation"' > /etc/profile 
+
+# Go 
+# Java
+# codenation cli
+
 # Add supervisord conf
 ADD conf/cloud9.conf /etc/supervisor/conf.d/
 
@@ -45,6 +60,7 @@ ADD conf/cloud9.conf /etc/supervisor/conf.d/
 # Add volumes
 RUN mkdir /workspace
 VOLUME /workspace
+VOLUME /codenation
 
 # ------------------------------------------------------------------------------
 # Clean up APT when done.
